@@ -1,0 +1,44 @@
+WWWWWWWWWWWWBWWWWWWWWWWWWBBBWWWWWWWWWWWWWWWWWWWWWWWWBWWWWWWWWWWWWWW
+
+Método A: 
+    Estrutura   :   Contador1Byte1Contador2Byte2....
+    Exemplo     :   12W1B12W3B24W1B14W
+
+Método B:
+    Estrutura   :   Se Byte1 se repetir     -> Byte1Byte1Contador1
+                    Se Byte1 não se repetir -> Byte1
+    Exemplo     :   WW12BWW12BB3WW24BWW14
+
+ABCD
+    Método 1 -> 1A1B1C1D
+    Método 2 -> ABCD
+
+--------------------------------
+
+SEQ 1: CCCCCVVVCCCRRRR
+   MA: 5C3V3C4R
+   MB: CC5VV3CC3RR4
+
+SEQ 2: CVCRCVCR
+   MA: 1C1V1C1R1C1V1C1R
+   MB: CVCRCVCR
+
+SEQ 3: CCCCCWVVVACCCXYRRRRZLK
+   MA: 5C1W3V1A3C1X1Y4R1Z1L1K
+   MB: CC5WVV3ACC3XYRR4ZLK
+
+SEQ 4: \x82\x7F\x7F\x7F\x7F\x9B\x9B...200 ocorrências deste último byte...\x9B
+   MA: \x01\x82\x04\x7F\xC8\x9B
+   MB: \x82\x7F\x7F\x04\x9B\x9B\xC8
+
+SEQ 5: \x82\x7F\x7F\x7F\x7F\x9B\x9B...300 ocorrências deste último byte...\x9B
+   MA: \x01\x82\x04\x7F\xFF\x9B\x2D\x9B
+   MB: \x82\x7F\x7F\x04\x9B\x9B\xFF\x9B\x9B\x2D
+
+
+
+
+
+
+
+
