@@ -31,7 +31,7 @@ import io
 from msilib.schema import Binary
 from typing import BinaryIO
 import time
-
+from datetime import datetime
 
 class RLEMethod(Enum):
     A = b'\x21'      # 33 or b'!'
@@ -46,7 +46,7 @@ def encode_rle(method: RLEMethod, in_file_path: str, out_file_path: str):
     with open(in_file_path, 'rb') as in_file:
         with open(out_file_path, 'wb') as out_file:
             out_file.write(method.value)
-            out_file.write(_int_to_byte(time.time))
+            out_file.write(int(time.time()).to_bytes(4,'big'))
             encode_fn(in_file, out_file)
 #:
 
@@ -108,9 +108,11 @@ def decode_rle(in_file_path: str, out_file_path: str):
             RLEMethod.A: _decode_mA,
             RLEMethod.B: _decode_mB,
         }[method]
-        timestamp = in_file.read(4)
+        timestamp = int.from_bytes(in_file.read(4), 'big')
         with open(out_file_path, 'wb') as out_file:
             decode_fn(in_file, out_file)
+    print ("Decompressed", in_file_path, "into", out_file_path, 'using method', method)
+    print('Compression date/time:', datetime.fromtimestamp(timestamp))
 #:
 
 def _decode_mA(in_file: BinaryIO, out_file: BinaryIO):
