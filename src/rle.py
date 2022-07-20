@@ -30,6 +30,7 @@ from enum import Enum
 import io
 from msilib.schema import Binary
 from typing import BinaryIO
+import time
 
 
 class RLEMethod(Enum):
@@ -45,6 +46,7 @@ def encode_rle(method: RLEMethod, in_file_path: str, out_file_path: str):
     with open(in_file_path, 'rb') as in_file:
         with open(out_file_path, 'wb') as out_file:
             out_file.write(method.value)
+            out_file.write(_int_to_byte(time.time))
             encode_fn(in_file, out_file)
 #:
 
@@ -106,6 +108,7 @@ def decode_rle(in_file_path: str, out_file_path: str):
             RLEMethod.A: _decode_mA,
             RLEMethod.B: _decode_mB,
         }[method]
+        timestamp = in_file.read(4)
         with open(out_file_path, 'wb') as out_file:
             decode_fn(in_file, out_file)
 #:
