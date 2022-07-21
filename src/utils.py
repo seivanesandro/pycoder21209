@@ -7,6 +7,13 @@ import os
 import json
 import pathlib
 
+__all__ = [
+    'gen_unique_path_from',
+    'overwrite_if_needed_or_exit',
+    'exists_or_exit',
+    'dump_objs',
+]
+
 #######################################################################
 ##
 ##   FILE RELATED UTILITIES AMONG OTHER STUFF
@@ -39,6 +46,12 @@ def gen_unique_path_from(path_: str) -> str:
 #:
 
 def overwrite_if_needed_or_exit(dest_file_path: str, error_code=3):
+    """
+    Overwrites the file given by C{dest_file} if the file exists
+    and if the user wants to overwrite. Exits from Python if the file 
+    exists and the user doesn't want to overwrite.
+    c{error_code} is the code given to c{sys.exit}.
+    """
     if os.path.exists(dest_file_path):
         answer = input(f"File {dest_file_path} exists. Overwrite (y or n)? ")
         if answer.strip().lower() != 'y':
@@ -47,7 +60,12 @@ def overwrite_if_needed_or_exit(dest_file_path: str, error_code=3):
     #:
 #:
 
-def exists_or_exit(file_path, error_code=3):
+def exists_or_exit(file_path: str, error_code=3):
+    """
+    The file given by {file_path} must exist or else we exit from
+    Python.
+    c{error_code} is the code given to c{sys.exit}.
+    """
     if not os.path.exists(file_path):
         print(f"File {file_path} doesn't exist", file=sys.stderr)
         sys.exit(error_code)

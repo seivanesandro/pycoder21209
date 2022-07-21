@@ -27,7 +27,7 @@ $$LICENSE(GPL)
 """
 
 from enum import Enum
-import io
+from io import SEEK_CUR
 from msilib.schema import Binary
 from typing import BinaryIO
 import time
@@ -112,7 +112,7 @@ def decode_rle(in_file_path: str, out_file_path: str):
         with open(out_file_path, 'wb') as out_file:
             decode_fn(in_file, out_file)
     print ("Decompressed", in_file_path, "into", out_file_path, 'using method', method)
-    print('Compression date/time:', datetime.fromtimestamp(timestamp))
+    print ('Compression date/time:', datetime.fromtimestamp(timestamp))
 #:
 
 def _decode_mA(in_file: BinaryIO, out_file: BinaryIO):
@@ -135,16 +135,21 @@ def _decode_mB(in_file: BinaryIO, out_file: BinaryIO):
             1.3.2 Se houver byte2, então voltar a colocar na entrada byte2 (para que a próxima iteração começa a partir deste byte2)
     """
     
-    for byte1, byte2 in iter(lambda: in_file.read(2), b''):
-        if not byte1:
+    while True:
+            # Note that 2 x read(1) != read(2). The later may not 
+        # return 2 bytes, and that would break the code.
+        b1, b2 = in_file.read(1), in_file.read(1) 
+        if not b1:
             break
-        elif byte1 == byte2:
-            count = in_file.read(1)
-            out_file.write(count * _int_to_byte(byte1))
+
+        if b1 == b2:
+            b3 = in_file.read(1)
+            count = b3[0]
         else:
-            out_file.write(_int_to_byte(byte1))
-            if byte2:
-                byte1=byte2
+            if b2:   # ou seja, se b2 != b''
+                in_file.seek(-1, SEEK_CUR)
+            count = 1
+        out_file.write(count * b1)
 #:    
 
 
